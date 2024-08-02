@@ -8,6 +8,7 @@ use Mpesa;
 class PayController extends Controller
 {
     // Display a form for making a payment
+    // this is through mpesa
     public function showPaymentForm()
     {
 $BusinessShortCode= '174379';
