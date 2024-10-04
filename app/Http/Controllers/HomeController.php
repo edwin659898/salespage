@@ -9,6 +9,10 @@ use App\Models\ProductReview;
 use App\Models\PostComment;
 use App\Rules\MatchOldPassword;
 use Hash;
+use Illuminate\Contracts\Session\Session as SessionSession;
+
+use Session;
+use Stripe;
 
 class HomeController extends Controller
 {
@@ -225,6 +229,95 @@ class HomeController extends Controller
    
         return redirect()->route('user')->with('success','Password successfully changed');
     }
+// card, visa
+    public function stripe($total_amount){
 
+        return view('home.stripe',compact('total_amount'));
+    }
+    public function stripePost(Request $request,$total_amount)
+    {
+        dd($total_amount);
+        
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
     
+        Stripe\Charge::create ([
+                "amount" =>$total_amount * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
+        ]);
+         Session::flash('success', 'Payment successful!');
+              
+        return back();
+    }
+
+
+    // mpesa
+    public function mpesa($total_amount){
+
+        return view('home.mpesa',compact('total_amount'));
+    }
+    public function mpesaPost(Request $request,$total_amount)
+    {
+        dd($total_amount);
+        
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+    
+        Stripe\Charge::create ([
+                "amount" =>$total_amount * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
+        ]);
+         Session::flash('success', 'Payment successful!');
+              
+        return back();
+    }
+
+
+
+    // paypal
+    public function paypal($total_amount){
+
+        return view('home.paypal',compact('total_amount'));
+    }
+    public function paypalPost(Request $request,$total_amount)
+    {
+        dd($total_amount);
+        
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+    
+        Stripe\Charge::create ([
+                "amount" =>$total_amount * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
+        ]);
+         Session::flash('success', 'Payment successful!');
+              
+        return back();
+    }
+
+    // cash oder
+    public function cash_oder($total_amount){
+
+        return view('home.cash_oder',compact('total_amount'));
+    }
+    public function cash_oderPost(Request $request,$total_amount)
+    {
+        dd($total_amount);
+        
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+    
+        Stripe\Charge::create ([
+                "amount" =>$total_amount * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
+        ]);
+         Session::flash('success', 'Payment successful!');
+              
+        return back();
+    }
+   
 }

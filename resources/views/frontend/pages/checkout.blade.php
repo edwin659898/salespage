@@ -13,6 +13,7 @@
                         <ul class="bread-list">
                             <li><a href="{{route('home')}}">Home<i class="ti-arrow-right"></i></a></li>
                             <li class="active"><a href="javascript:void(0)">Checkout</a></li>
+
                         </ul>
                     </div>
                 </div>
@@ -352,6 +353,8 @@
                                     
                                 </div>
                                 <!--/ End Form -->
+                                 <button type="submit" class="btn">Cancel CheckOut</button>
+
                             </div>
                         </div>
                         <div class="col-lg-4 col-12">
@@ -362,7 +365,7 @@
                                     <div class="content">
                                         <ul>
 										    <li class="order_subtotal" data-price="{{Helper::totalCartPrice()}}">Cart Subtotal<span>${{number_format(Helper::totalCartPrice(),2)}}</span></li>
-                                            {{-- <li class="shipping">
+                                            <li class="shipping">
                                                 Shipping Cost
                                                 @if(count(Helper::shipping())>0 && Helper::cartCount()>0)
                                                     <select name="shipping" class="nice-select">
@@ -374,7 +377,7 @@
                                                 @else 
                                                     <span>Free</span>
                                                 @endif
-                                            </li> --}}
+                                            </li>
                                             
                                             @if(session('coupon'))
                                             <li class="coupon_price" data-price="{{session('coupon')['value']}}">You Save<span>${{number_format(session('coupon')['value'],2)}}</span></li>
@@ -399,12 +402,12 @@
                                     <h2>Payments</h2>
                                     <div class="content">
                                         <div class="checkbox">
-                                            {{-- <label class="checkbox-inline" for="1"><input name="updates" id="1" type="checkbox"> Check Payments</label> --}}
-                                            <form-group>
+                                            <label class="checkbox-inline" for="1"><input name="updates" id="1" type="checkbox"> Check Payments</label>
+                                            {{-- <form-group>
                                                 <input name="payment_method"  type="radio" value="cod"> <label> Cash On Delivery</label><br>
                                                 <input name="payment_method"  type="radio" value="paypal"> <label> PayPal</label> <br>
                                                 <input name="payment_method"  type="radio" value="mpesa"> <label> M-Pesa</label> <br>
-                                            </form-group>
+                                            </form-group> --}}
                                             
                                         </div>
                                     </div>
@@ -421,8 +424,11 @@
                                 <div class="single-widget get-button">
                                     <div class="content">
                                         <div class="button">
-                                            <button type="submit" class="btn">PayPal</button>
-                                            <button type="submit" class="btn">M-Pesa</button>
+                                            <button type="submit" class="btn"><a href="{{ url('paypal',$total_amount)}}" class="btn btn-danger">PayPal</a></button>
+                                            <button type="submit" class="btn"><a href="{{ url('stripe',$total_amount)}}" class="btn btn-danger">VISA</a></button>
+                                            <button type="submit" class="btn"><a href="{{ url('mpesa',$total_amount) }}" class="btn btn-danger">M-Pesa(MTN)</a></button>
+                                            <button type="submit" class="btn"><a href="{{ url('cash_oder',$total_amount) }}" class="btn btn-danger">Cash Delivary</a></button>
+                                            {{-- <button type="submit" class="btn">M-Pesa</button> --}}
                                         </div>
                                     </div>
                                 </div>

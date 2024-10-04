@@ -19,6 +19,7 @@
     use App\Http\Controllers\HomeController;
     use \UniSharp\LaravelFilemanager\Lfm;    
     use App\Http\Controllers\PayController;
+    use App\Http\Controllers\PaymentController;
 
     /*
     |--------------------------------------------------------------------------
@@ -37,6 +38,28 @@
         request()->session()->flash('success', 'Successfully cache cleared.');
         return login()->back();
     })->name('cache.clear');
+
+    // Mpesa Daraja
+    // Route::controller(PaymentController::class)
+    // ->prefix('payments')
+    // ->as('payments')
+    // ->group(function(){
+    //     Route::get('/initiatepush','initiateStkPush')->name('initiatepush');
+    //     Route::post('/stkcallback','stkCallback')->name('stkcallback');
+    //     Route::get('/stkquery','stkQuery')->name('stkquery');
+    //     Route::get('/registerurl','registerUrl')->name('registerurl');
+    //     Route::post('/validation','Validation')->name('validation');
+    //     Route::post('/confirmation','Confirmation')->name('confirmation');
+    //     Route::get('/simulate','Simulate')->name('simulate');
+    //     Route::get('/qrcode','qrcode')->name('qrcode');
+    //     Route::get('/b2c','b2c')->name('b2c');
+    //     Route::post('/b2cresult','b2cResult')->name('b2cresult');
+    //     Route::post('/b2ctimeout','b2cTimeout')->name('b2ctimeout');
+    //     Route::get('/reversal','Reversal')->name('reversal');
+    //     Route::post('/reversalresult','reversalResult')->name('reversalresult');
+    //     Route::post('/reversaltimeout','reversalTimeout')->name('reversaltimeout');
+
+    // });
 
 
     // STORAGE LINKED ROUTE
@@ -223,6 +246,26 @@ Route::get('/payment/form', [PayController::class, 'showPaymentForm'])->name('pa
 Route::post('/payment/process', [PayController::class, 'processPayment'])->name('payment.process');
 Route::get('/payment/success', [PayController::class, 'paymentSuccess'])->name('payment.success');
 
+// Payment module
+Route::get('/cash_order',[HomeController::class,'cash_order']); 
+Route::get('/stripe/{total_amount}',[HomeController::class,'stripe']); 
+Route::post('stripe/{total_amount}',[HomeController::class,'stripePost'])->name('stripe.post'); 
 
-// route::get('fontend/pages/google', [GoogleController::class,'loginWithGoogle']);
-// route::get('fontend/pages/google/callback', [GoogleController::class,'callbackFromGoogle']);
+// mpesa home
+Route::get('/mpesa/{total_amount}',[HomeController::class,'mpesa']); 
+Route::post('/mpesa/stk_initiate', [HomeController::class, 'stkInitiate']);
+
+// paypal home
+Route::get('/paypal/{total_amount}',[HomeController::class,'paypal']); 
+// Route::post('/paypal/stk_initiate', [HomeController::class, 'stkInitiate']);
+
+Route::post('pay', [PayPalController::class, 'pay'])->name('payment');
+
+
+// cash home
+Route::get('/cash_oder/{total_amount}',[HomeController::class,'cash_oder']); 
+Route::post('/cash_oder/stk_initiate', [HomeController::class, 'stkInitiate']);
+
+Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
+Route::get('success', [PaypalController::class, 'success'])->name('success');
+Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');

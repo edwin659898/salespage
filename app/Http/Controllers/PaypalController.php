@@ -2,86 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
-use Srmklive\PayPal\Services\ExpressCheckout;
 use Illuminate\Http\Request;
-use NunoMaduro\Collision\Provider;
-use App\Models\Cart;
-use App\Models\Product;
-use DB;
+use App\Http\Controllers\PayController; 
+use Omnipay\Omnipay; 
+
 class PaypalController extends Controller
 {
-    public function payment()
-    {
-        $cart = Cart::where('user_id',auth()->user()->id)->where('order_id',null)->get()->toArray();
-        
-        $data = [];
-        
-        // return $cart;
-        $data['items'] = array_map(function ($item) use($cart) {
-            $name=Product::where('id',$item['product_id'])->pluck('title');
-            return [
-                'name' =>$name ,
-                'price' => $item['price'],
-                'desc'  => 'Thank you for using paypal',
-                'qty' => $item['quantity']
-            ];
-        }, $cart);
-
-        $data['invoice_id'] ='ORD-'.strtoupper(uniqid());
-        $data['invoice_description'] = "Order #{$data['invoice_id']} Invoice";
-        $data['return_url'] = route('payment.success');
-        $data['cancel_url'] = route('payment.cancel');
-
-        $total = 0;
-        foreach($data['items'] as $item) {
-            $total += $item['price']*$item['qty'];
-        }
-
-        $data['total'] = $total;
-        if(session('coupon')){
-            $data['shipping_discount'] = session('coupon')['value'];
-        }
-        Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => session()->get('id')]);
-
-        // return session()->get('id');
-        $provider = new ExpressCheckout;
-  
-        $response = $provider->setExpressCheckout($data);
-    
-        return redirect($response['paypal_link']);
-    }
-   
+    private $gateway;
     /**
-     * Responds with a welcome message with instructions
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function cancel()
+    public function _construct()
     {
-        dd('Your payment is canceled. You can create cancel page here.');
-        return view('payment.cancel');
+        $this->gateway = Omnipay::create('PayPal_Rest'); 
+        $this->gateway->setClientId('PAYPAL_CLIENT_ID'); 
+        $this->gateway->setSecreate('PAYPAL_CLIENT_SECREATE'); 
+        $this->gateway->setTestMode(true); 
     }
-  
-    /**
-     * Responds with a welcome message with instructions
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function success(Request $request)
-    {
-        $provider = new ExpressCheckout;
-        $response = $provider->getExpressCheckoutDetails($request->token);
-        // return $response;
-  
-        if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
-            request()->session()->flash('success','You successfully pay from Paypal! Thank You');
-            session()->forget('cart');
-            session()->forget('coupon');
-            return redirect()->route('home');
-        }
-  
-        request()->session()->flash('error','Something went wrong please try again!!!');
-        return redirect()->back();
+    public function pay(Request $request){
+        try{
+             $response = $this->gateway->purchase(array(
+                'amount' => $request->amount, 
+                'currency' => env('PayPAL_Currency'),
+                'returnUrl' => url('success'),
+                'cancelUrl' => url('error'),
+             ));
+             if($response){
+                $response->redirect();
+             }else{
+                return $request->getMessage(); 
+             }
+       }catch(\Throwable $th){
+            return $th->getMessage();
+
+       }
     }
 }

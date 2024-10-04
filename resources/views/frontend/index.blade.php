@@ -1,5 +1,5 @@
 @extends('frontend.layouts.master')
-@section('title','Magazines || HOME PAGE')
+@section('title','Sales-Page || HOME PAGE')
 @section('main-content')
 <!-- Slider Area -->
 @if(count($banners)>0)
@@ -17,7 +17,7 @@
                     <div class="carousel-caption d-none d-md-block text-left">
                         <h1 class="wow fadeInDown">{{$banner->title}}</h1>
                         <p>{!! html_entity_decode($banner->description) !!}</p>
-                        <a class="btn btn-lg ws-btn wow fadeInUpBig" href="{{route('product-grids')}}" role="button">View Magazine<i class="far fa-arrow-alt-circle-right"></i></i></a>
+                        <a class="btn btn-lg ws-btn wow fadeInUpBig" href="{{route('product-grids')}}" role="button">See Our Products<i class="far fa-arrow-alt-circle-right"></i></i></a>
                     </div>
                 </div>
             @endforeach
@@ -80,7 +80,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="section-title">
-                        <h2>Magazines</h2>
+                        <h2>What We Have</h2>
                     </div>
                 </div>
             </div>
@@ -219,7 +219,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="section-title">
-                    <h2>Most Viewed Magazines</h2>
+                    <h2>Most Viewed Products</h2>
                 </div>
             </div>
         </div>
@@ -279,7 +279,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="shop-section-title">
-                            <h1>Latest Items</h1>
+                            <h1>Latest Products</h1>
                         </div>
                     </div>
                 </div>
@@ -560,7 +560,7 @@
         }
 
         #Gslider .carousel-inner{
-        height: 550px;
+        height: 350px;
         }
         #Gslider .carousel-inner img{
             width: 100% !important;
@@ -575,12 +575,12 @@
         font-size: 50px;
         font-weight: bold;
         line-height: 100%;
-        color: #F7941D;
+        color: #d6d6d6;
         }
 
         #Gslider .carousel-inner .carousel-caption p {
         font-size: 18px;
-        color: black;
+        color: rgb(185, 65, 65);
         margin: 28px 0 28px 0;
         }
 

@@ -67,6 +67,7 @@ return [
     |
     */
 
+    'timezone' => 'Africa/Nairobi',
     'timezone' => 'UTC',
 
     /*
@@ -248,6 +249,20 @@ return [
 
         'PayPal' => Srmklive\PayPal\Facades\PayPal::class,
 
+    ],
+
+    'debug_blacklist' => [
+        '_ENV' => [
+            'MPESA_CONSUMER_KEY',
+            'MPESA_CONSUMER_SECRET',
+            'MPESA_SHORTCODE',
+            'MPESA_ENV',
+            'MPESA_CALLBACK_URL',
+            'MPESA_TEST_MISSION',
+            'MPESA_TEST_MISSION',
+            'MPESA_PASSKEY',
+            'MPESA_B2C_PASSWORD'
+        ]
     ],
 
 ];

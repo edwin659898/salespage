@@ -24,7 +24,7 @@
 						<div class="single-footer links">
 							<h4>Information</h4>
 							<ul>
-								<li><a href="{{route('about-us')}}">Website</a></li>
+								<li><a href="https://betterglobeforestry.com">Website</a></li>
 								<li><a href="#">Newsletter</a></li>
 								{{-- <li><a href="#">Terms & Conditions</a></li> --}}
 								<li><a href="{{route('contact')}}">Contact Us</a></li>
@@ -38,11 +38,20 @@
 						<div class="single-footer links">
 							<h4>Customer Service</h4>
 							<ul>
-								<li><a href="#">Payment Methods</a></li>
+								<li><a href="#">Privacy Policy</a></li>
+						
+								<li><a href="#">Payment Methods</a>
+									<li><a href="#">  </a></li>
+								
+									<i style="color: green"> <a href="{{ url('paypal',$total_amount)}}" target="_blank">Paypal, </a></i>
+									<i style="color: green"> <a href="{{ url('stripe',$total_amount)}}" target="_blank">VISA, </a></i>
+                                    <i style="color: green"> <a href="{{ url('mpesa',$total_amount) }}" target="_blank">MPesa(MTN), </a></i>
+                                    <i style="color: green"> <a href="{{ url('cash_order',$total_amount)}}" target="_blank">Cash</a></i>
+								</li>
 								{{-- <li><a href="#">Money-back</a></li> --}}
 								{{-- <li><a href="#">Returns</a></li> --}}
 								{{-- <li><a href="#">Shipping</a></li> --}}
-								<li><a href="#">Privacy Policy</a></li>
+								
 							</ul>
 						</div>
 						<!-- End Single Widget -->
@@ -74,7 +83,7 @@
 					<div class="row">
 						<div class="col-lg-6 col-12">
 							<div class="left">
-								<p>Copyright © {{date('Y')}} <a href="https://github.com/Prajwal100" target="_blank">Better Globe Forestry IT-Team</a>  -  All Rights Reserved.</p>
+								<p>Copyright © {{date('Y')}} <a href="https://betterglobeforestry.com" target="_blank">Better Globe Forestry IT-Team</a>  -  All Rights Reserved.</p>
 							</div>
 						</div>
 						<div class="col-lg-6 col-12">

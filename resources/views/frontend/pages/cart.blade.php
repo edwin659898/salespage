@@ -111,12 +111,12 @@
 											<button class="btn">Apply</button>
 										</form>
 									</div>
-									{{-- <div class="checkbox">`
+									<div class="checkbox">`
 										@php
 											$shipping=DB::table('shippings')->where('status','active')->limit(1)->get();
 										@endphp
 										<label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox" onchange="showMe('shipping');"> Shipping</label>
-									</div> --}}
+									</div>
 								</div>
 							</div>
 							<div class="col-lg-4 col-md-7 col-12">
@@ -124,8 +124,28 @@
 									<ul>
 										<li class="order_subtotal" data-price="{{Helper::totalCartPrice()}}">Cart Subtotal<span>${{number_format(Helper::totalCartPrice(),2)}}</span></li>
 
+										
 										@if(session()->has('coupon'))
 										<li class="coupon_price" data-price="{{Session::get('coupon')['value']}}">You Save<span>${{number_format(Session::get('coupon')['value'],2)}}</span></li>
+
+										{{-- shipping --}}
+										{{-- <li class="shipping">
+											Shipping Cost
+											@if(count(Helper::shipping())>0 && Helper::cartCount()>0)
+												<select name="shipping" class="nice-select">
+													<option value="">Select your address</option>
+													@foreach(Helper::shipping() as $shipping)
+													<option value="{{$shipping->id}}" class="shippingOption" data-price="{{$shipping->price}}">{{$shipping->type}}: ${{$shipping->price}}</option>
+													@endforeach
+												</select>
+											@else 
+												<span>Free</span>
+											@endif
+										</li> --}}
+
+										{{-- shipping --}}
+
+
 										@endif
 										@php
 											$total_amount=Helper::totalCartPrice();
@@ -134,7 +154,15 @@
 											}
 										@endphp
 										@if(session()->has('coupon'))
+										{{-- && session()->has('shipping')) --}}
 											<li class="last" id="order_total_price">You Pay<span>${{number_format($total_amount,2)}}</span></li>
+
+										{{-- @elseif(session()->has('coupon') && !session()->has('shipping'))
+										    <li class="last" id="order_total_price">You Pay<span>${{ number_format($total_amount, 2) }}</span></li>
+										
+										@elseif(!session()->has('coupon') && session()->has('shipping'))
+											<li class="last" id="order_total_price">You Pay<span>${{ number_format($total_amount, 2) }}</span></li> --}}
+
 										@else
 											<li class="last" id="order_total_price">You Pay<span>${{number_format($total_amount,2)}}</span></li>
 										@endif
