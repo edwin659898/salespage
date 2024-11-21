@@ -140,7 +140,7 @@
 
                     <input type="hidden" name="amount" value="{{ $total_amount}}">
 
-                     <button type="submit" class="btn btn-success" name="submit" value="submit">Pay ${{ $total_amount}}</button>
+                     <button type="submit" class="btn btn-success" name="submit" value="submit" wire:click="checkout">Pay ${{ $total_amount}}</button>
                 
                    </form>
                 </div>

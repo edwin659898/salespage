@@ -19,7 +19,7 @@
         "pusher/pusher-php-server": "^7.2",
         "safaricom/mpesa": "*",
         "spatie/laravel-newsletter": "^5.1",
-        "srmklive/paypal": "~3.0",
+        "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "*",
         "unisharp/laravel-filemanager": "^2.6"
     },

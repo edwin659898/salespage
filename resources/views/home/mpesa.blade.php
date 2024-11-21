@@ -116,14 +116,14 @@
         <div class="media mt-3 pl-2">
                           <!--bs5 input-->
 
-            <form class="row g-3" action="./stk_initiate.php" method="POST">
+            <form class="row g-3" action="./process_payment_form.php" method="POST">
             
                 <div class="col-12">
                   {{-- <label for="inputAddress"  class="btn btn-success">Pay Now ${{ $total_amount }}</label> --}}
             {{-- <p class="btn btn-primary btn-lg btn-block" type="submit">Pay Now {{ $total_amount }}</p> --}}
                   {{-- <input type="text" class="form-control" name="amount" placeholder="Enter Amount"> --}}
 
-                  <p>Enter your M-Pesa phone number below and we will make a request for payment to your phone.<br> You will be prompted for your M-Pesa PIN on your phone.</p>
+                  <p style="color: #fff">Enter your M-Pesa <span style="color: #d81a1a">PHONE NUMBER</span> below then click Pay.<br> It will propt you to Enter your <span style="color: #d81a1a">PIN</span>.<br> Please confirm the amount and name (Sales Page) before Sending </p>
                 </div>
                 <div class="col-12">
                   <label for="tel" class="form-label" >Enter Phone Number</label>

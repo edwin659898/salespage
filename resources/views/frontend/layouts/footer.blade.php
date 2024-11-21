@@ -43,10 +43,10 @@
 								<li><a href="#">Payment Methods</a>
 									<li><a href="#">  </a></li>
 								
-									<i style="color: green"> <a href="{{ url('paypal',$total_amount)}}" target="_blank">Paypal, </a></i>
-									<i style="color: green"> <a href="{{ url('stripe',$total_amount)}}" target="_blank">VISA, </a></i>
-                                    <i style="color: green"> <a href="{{ url('mpesa',$total_amount) }}" target="_blank">MPesa(MTN), </a></i>
-                                    <i style="color: green"> <a href="{{ url('cash_order',$total_amount)}}" target="_blank">Cash</a></i>
+									<i style="color: green"> <a href="" target="_blank">Paypal, </a></i>
+									<i style="color: green"> <a href="" target="_blank">VISA, </a></i>
+                                    <i style="color: green"> <a href="" target="_blank">MPesa(MTN), </a></i>
+                                    <i style="color: green"> <a href="" target="_blank">Cash</a></i>
 								</li>
 								{{-- <li><a href="#">Money-back</a></li> --}}
 								{{-- <li><a href="#">Returns</a></li> --}}
