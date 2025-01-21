@@ -269,3 +269,7 @@ Route::post('/cash_oder/stk_initiate', [HomeController::class, 'stkInitiate']);
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PaypalController::class, 'success'])->name('success');
 Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
+
+
+//post to Ipay
+Route::post('/mpesa/stk_initiate', [HomeController::class, 'initiatePayment'])->name('post.ipay');

@@ -259,19 +259,23 @@ class HomeController extends Controller
     }
     public function mpesaPost(Request $request,$total_amount)
     {
-        dd($total_amount);
+        const handler = StripeCheckout.configure({
+            key: 'kf@H%3HV3DbgKtW9SJCJDZwh6$%z8!G2',
+            locale: 'auto',
+            token: function(token) {
+                // Use token to process payment
+            }
+        });
         
-        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-    
-        Stripe\Charge::create ([
-                "amount" =>$total_amount * 100,
-                "currency" => "usd",
-                "source" => $request->stripeToken,
-                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
-        ]);
-         Session::flash('success', 'Payment successful!');
-              
-        return back();
+        document.getElementById('pay-button').addEventListener('click', function(e) {
+            handler.open({
+                name: 'Your Company',
+                description: 'Payment Description',
+                amount: total_amount * 100, // Amount in cents
+            });
+            e.preventDefault();
+        });
+        
     }
 
 
@@ -318,6 +322,69 @@ class HomeController extends Controller
          Session::flash('success', 'Payment successful!');
               
         return back();
+    }
+
+
+
+    //home controller
+    public function initiatePayment(Request $request)
+    {
+        // Example Order Details
+        $orderId = '12345'; // Unique order ID
+        $amount = 1; // Amount in KES
+        $phoneNumber = '254717606015'; // Customer's phone number
+        $email = 'mwangimike15@gmail.com'; // Customer's email
+
+        // Load iPay Credentials from Environment
+        $vendorId = env('IPAY_VENDOR_ID');
+        $callbackUrl = env('IPAY_CALLBACK_URL');
+        $secretKey = env('IPAY_VENDOR_SECRET');
+        $paymentUrl = env('IPAY_PAYMENT_URL');
+
+        // Prepare POST Data
+        $postData = [
+            'live' => '1', // Test environment (set to '1' for live)
+            'oid' => $orderId, // Order ID
+            'inv' => 'INV_' . $orderId, // Invoice number
+            'ttl' => $amount, // Amount
+            'tel' => $phoneNumber, // Customer's phone number
+            'eml' => $email, // Customer's email
+            'vid' => $vendorId, // Vendor ID
+            'curr' => 'KES', // Currency
+            'p1' => '',
+            'p2' => '',
+            'p3' => '',
+            'p4' => '',
+            'cbk' => $callbackUrl, // Callback URL
+            'cst' => '1', // Customer confirmation required
+            'crl' => '2', // Redirect URL
+        ];
+
+        // Generate the Hash
+        $hashString = $postData['live'].$postData['oid'] . $postData['inv'] . $postData['ttl'] . $postData['tel'] . $postData['eml'] . $postData['vid'];
+        $postData['hsh'] = hash_hmac('sha256', $hashString, $secretKey);
+
+        // Redirect to iPay Payment Page
+        return view('ipay/ipay', [
+            'paymentUrl' => $paymentUrl,
+            'data' => $postData,
+        ]);
+    }
+
+    public function handleCallback(Request $request)
+    {
+        // Retrieve and process callback data from iPay
+        $status = $request->get('status');
+        $transactionId = $request->get('txncd');
+        $orderId = $request->get('oid');
+
+        if ($status === 'aei7p7yrx4ae34') {
+            // Handle successful payment
+            return response()->json(['message' => 'Payment successful!', 'transaction_id' => $transactionId]);
+        } else {
+            // Handle failed payment
+            return response()->json(['message' => 'Payment failed!', 'status' => $status]);
+        }
     }
    
 }
