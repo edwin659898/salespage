@@ -259,24 +259,21 @@ class HomeController extends Controller
     }
     public function mpesaPost(Request $request,$total_amount)
     {
-        const handler = StripeCheckout.configure({
-            key: 'kf@H%3HV3DbgKtW9SJCJDZwh6$%z8!G2',
-            locale: 'auto',
-            token: function(token) {
-                // Use token to process payment
-            }
-        });
+        dd($total_amount);
         
-        document.getElementById('pay-button').addEventListener('click', function(e) {
-            handler.open({
-                name: 'Your Company',
-                description: 'Payment Description',
-                amount: total_amount * 100, // Amount in cents
-            });
-            e.preventDefault();
-        });
-        
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+    
+        Stripe\Charge::create ([
+                "amount" =>$total_amount * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
+        ]);
+         Session::flash('success', 'Payment successful!');
+              
+        return back();
     }
+
 
 
 
