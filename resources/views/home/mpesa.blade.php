@@ -91,7 +91,7 @@
         <div class="d-flex flex-row justify-content-around">
           <span>
             {{-- Mpesa  --}}
-            <a href=" " class="btn btn-danger">MPesa</a>
+            <a href="{{ url('mpesa',$total_amount)}}" class="btn btn-danger">MPesa</a>
         </span>
           
             <span>
@@ -116,12 +116,13 @@
         <div class="media mt-3 pl-2">
                           <!--bs5 input-->
 
-            <form class="row g-3" action="./process_payment_form.php" method="POST">
-            
+            <form class="row g-3"  method="POST" action="{{route('post.ipay')}}">
+            @csrf
+
                 <div class="col-12">
                   {{-- <label for="inputAddress"  class="btn btn-success">Pay Now ${{ $total_amount }}</label> --}}
             {{-- <p class="btn btn-primary btn-lg btn-block" type="submit">Pay Now {{ $total_amount }}</p> --}}
-                  {{-- <input type="text" class="form-control" name="amount" placeholder="Enter Amount"> --}}
+                  <input type="text" style="display:none;" class="form-control" name="amount" placeholder="Enter Amount" value="{{ $total_amount }}"> 
 
                   <p style="color: #fff">Enter your M-Pesa <span style="color: #d81a1a">PHONE NUMBER</span> below then click Pay.<br> It will propt you to Enter your <span style="color: #d81a1a">PIN</span>.<br> Please confirm the amount and name (Sales Page) before Sending </p>
                 </div>

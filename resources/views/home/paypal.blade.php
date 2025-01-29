@@ -120,6 +120,14 @@
                           <!--bs5 input-->
 
             <form class="row g-3" action="./stk_initiate.php" method="POST">
+
+              @csrf
+
+                <div class="col-12">
+                  {{-- <label for="inputAddress"  class="btn btn-success">Pay Now ${{ $total_amount }}</label> --}}
+            {{-- <p class="btn btn-primary btn-lg btn-block" type="submit">Pay Now {{ $total_amount }}</p> --}}
+                  <input type="text" style="display:none;" class="form-control" name="amount" placeholder="Enter Amount" value="{{ $total_amount }}"> 
+
             
                 <div class="col-12">
                   {{-- <label for="inputAddress"  class="btn btn-success">Pay Now ${{ $total_amount }}</label> --}}

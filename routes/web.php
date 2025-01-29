@@ -253,11 +253,10 @@ Route::post('stripe/{total_amount}',[HomeController::class,'stripePost'])->name(
 
 // mpesa home
 Route::get('/mpesa/{total_amount}',[HomeController::class,'mpesa']); 
-Route::post('/mpesa/stk_initiate', [HomeController::class, 'stkInitiate']);
 
 // paypal home
 Route::get('/paypal/{total_amount}',[HomeController::class,'paypal']); 
-// Route::post('/paypal/stk_initiate', [HomeController::class, 'stkInitiate']);
+Route::post('/paypal/stk_initiate', [HomeController::class, 'stkInitiate']);
 
 Route::post('pay', [PayPalController::class, 'pay'])->name('payment');
 
@@ -272,4 +271,7 @@ Route::get('cancel', [PaypalController::class, 'cancel'])->name('cancel');
 
 
 //post to Ipay
-Route::post('/mpesa/stk_initiate', [HomeController::class, 'initiatePayment'])->name('post.ipay');
+Route::post('/mpesa/stk_initiate', [HomeController::class, 'initiatePayment'])
+    ->name('post.ipay')
+    ->middleware('auth');
+Route::get('/ipay_payment', [HomeController::class, 'handlePaymentCallback'])->name('ipay.callback');

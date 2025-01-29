@@ -2,38 +2,30 @@
 
 namespace App\Mail;
 
+use App\Models\Order;
+use App\User;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class OrderMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public Carts $cart; 
 
-
-
-
-
-
-    // $cart->user_id = auth()->user()->id;
-    //         $cart->product_id = $product->id;
-    //         $cart->price = ($product->price-($product->price*$product->discount)/100);
-    //         $cart->quantity = $request->quant[1];
-    //         $cart->amount=($product->price * $request->quant[1]);
-
-
-
+    public $order, $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($cart)
+    public function __construct(Order $order ,User $user)
     {
-       $this->cart = $cart;
+        $this->order = $order;
+        $this->user = $user;
     }
 
     /**
@@ -42,7 +34,7 @@ class OrderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Mail',
+            subject: 'Your Order is being Processed',
         );
     }
 
@@ -52,7 +44,12 @@ class OrderMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.orders',
+            with:[
+                'order' => $this->order,
+                'customer' => $this->user,
+                'order_url' => URL::route('user.order.show', $this->order->id)
+            ]
         );
     }
 
@@ -65,10 +62,4 @@ class OrderMail extends Mailable
     {
         return [];
     }
-    public function build(){
-
-       return $this->subject('Order Confirmation')->view('mails.order-mail');   
-    }
-        
-    
 }

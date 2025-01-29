@@ -85,11 +85,11 @@
         </div>
 
         <div class="form-group">
-          <label for="brand_id">Brand</label>
+          <label for="brand_id">Author/Brand</label>
           {{-- {{$brands}} --}}
 
           <select name="brand_id" class="form-control">
-              <option value="">--Select Brand--</option>
+              <option value="">--Select Author/Brand--</option>
              @foreach($brands as $brand)
               <option value="{{$brand->id}}">{{$brand->title}}</option>
              @endforeach
@@ -102,7 +102,10 @@
               <option value="">--Select Condition--</option>
               <option value="default">Default</option>
               <option value="new">New</option>
-              <option value="hot">Hot</option>
+              <option value="hot">Refubrished</option>
+              <option value="used">Used</option>
+              <option value="soft">Soft Copy</option>
+              <option value="hard">Hard Copy</option>
           </select>
         </div>
 
