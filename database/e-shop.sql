@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 19, 2020 at 10:17 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.1
+-- Generation Time: Jan 28, 2025 at 10:42 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `e-tech`
+-- Database: `salespage`
 --
 
 -- --------------------------------------------------------
@@ -30,11 +29,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `banners` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `photo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'inactive',
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `photo` varchar(191) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -56,9 +55,9 @@ INSERT INTO `banners` (`id`, `title`, `slug`, `photo`, `description`, `status`, 
 
 CREATE TABLE `brands` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -86,7 +85,7 @@ CREATE TABLE `carts` (
   `order_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `price` double(8,2) NOT NULL,
-  `status` enum('new','progress','delivered','cancel') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'new',
+  `status` enum('new','progress','delivered','cancel') NOT NULL DEFAULT 'new',
   `quantity` int(11) NOT NULL,
   `amount` double(8,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -106,7 +105,12 @@ INSERT INTO `carts` (`id`, `product_id`, `order_id`, `user_id`, `price`, `status
 (8, 9, 4, 3, 190.00, 'new', 2, 380.00, '2020-08-15 07:44:53', '2020-08-15 07:54:53'),
 (9, 6, 4, 3, 5820.00, 'new', 4, 23280.00, '2020-08-15 07:45:29', '2020-08-15 07:54:53'),
 (10, 10, NULL, 2, 270.00, 'new', 1, 270.00, '2020-08-17 21:07:33', '2020-08-17 21:17:03'),
-(11, 9, NULL, 2, 190.00, 'new', 2, 380.00, '2020-08-17 21:08:35', '2020-08-17 21:17:03');
+(11, 9, NULL, 2, 190.00, 'new', 2, 380.00, '2020-08-17 21:08:35', '2020-08-17 21:17:03'),
+(12, 8, 10, 30, 200.00, 'new', 1, 200.00, '2025-01-21 03:05:19', '2025-01-24 04:08:49'),
+(13, 9, 10, 30, 190.00, 'new', 1, 190.00, '2025-01-21 03:05:41', '2025-01-24 04:08:49'),
+(14, 10, 10, 30, 270.00, 'new', 1, 270.00, '2025-01-23 03:33:02', '2025-01-24 04:08:49'),
+(15, 1, 11, 30, 540.00, 'new', 1, 540.00, '2025-01-24 04:09:16', '2025-01-24 04:09:43'),
+(16, 4, NULL, 31, 2000.00, 'new', 1, 2000.00, '2025-01-24 09:15:25', '2025-01-24 09:15:25');
 
 -- --------------------------------------------------------
 
@@ -116,14 +120,14 @@ INSERT INTO `carts` (`id`, `product_id`, `order_id`, `user_id`, `price`, `status
 
 CREATE TABLE `categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `summary` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `photo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `summary` text DEFAULT NULL,
+  `photo` varchar(191) DEFAULT NULL,
   `is_parent` tinyint(1) NOT NULL DEFAULT 1,
   `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
   `added_by` bigint(20) UNSIGNED DEFAULT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'inactive',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -149,10 +153,10 @@ INSERT INTO `categories` (`id`, `title`, `slug`, `summary`, `photo`, `is_parent`
 
 CREATE TABLE `coupons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` enum('fixed','percent') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'fixed',
+  `code` varchar(191) NOT NULL,
+  `type` enum('fixed','percent') NOT NULL DEFAULT 'fixed',
   `value` decimal(20,2) NOT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'inactive',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -162,9 +166,9 @@ CREATE TABLE `coupons` (
 --
 
 INSERT INTO `coupons` (`id`, `code`, `type`, `value`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'abc123', 'fixed', '300.00', 'active', NULL, NULL),
-(2, '111111', 'percent', '10.00', 'active', NULL, NULL),
-(5, 'abcd', 'fixed', '250.00', 'active', '2020-08-17 20:54:58', '2020-08-17 20:54:58');
+(1, 'abc123', 'fixed', 300.00, 'active', NULL, NULL),
+(2, '111111', 'percent', 10.00, 'active', NULL, NULL),
+(5, 'abcd', 'fixed', 250.00, 'active', '2020-08-17 20:54:58', '2020-08-17 20:54:58');
 
 -- --------------------------------------------------------
 
@@ -174,12 +178,36 @@ INSERT INTO `coupons` (`id`, `code`, `type`, `value`, `status`, `created_at`, `u
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `queue` varchar(191) NOT NULL,
+  `payload` longtext NOT NULL,
+  `attempts` tinyint(3) UNSIGNED NOT NULL,
+  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
+  `available_at` int(10) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `jobs`
+--
+
+INSERT INTO `jobs` (`id`, `queue`, `payload`, `attempts`, `reserved_at`, `available_at`, `created_at`) VALUES
+(1, 'default', '{\"uuid\":\"27641281-0a0d-44fd-bc88-464737f9894c\",\"displayName\":\"Illuminate\\\\Notifications\\\\Events\\\\BroadcastNotificationCreated\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Broadcasting\\\\BroadcastEvent\",\"command\":\"O:38:\\\"Illuminate\\\\Broadcasting\\\\BroadcastEvent\\\":14:{s:5:\\\"event\\\";O:60:\\\"Illuminate\\\\Notifications\\\\Events\\\\BroadcastNotificationCreated\\\":3:{s:10:\\\"notifiable\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:8:\\\"App\\\\User\\\";s:2:\\\"id\\\";i:1;s:9:\\\"relations\\\";a:0:{}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:12:\\\"notification\\\";O:36:\\\"App\\\\Notifications\\\\StatusNotification\\\":2:{s:45:\\\"\\u0000App\\\\Notifications\\\\StatusNotification\\u0000details\\\";a:3:{s:5:\\\"title\\\";s:17:\\\"New order created\\\";s:9:\\\"actionURL\\\";s:36:\\\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/10\\\";s:3:\\\"fas\\\";s:11:\\\"fa-file-alt\\\";}s:2:\\\"id\\\";s:36:\\\"2a78c465-a78b-4dbe-bb51-d49074d278dd\\\";}s:4:\\\"data\\\";a:5:{s:5:\\\"title\\\";s:17:\\\"New order created\\\";s:9:\\\"actionURL\\\";s:36:\\\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/10\\\";s:3:\\\"url\\\";s:77:\\\"http:\\/\\/127.0.0.1:8000\\/admin\\/notification\\/2a78c465-a78b-4dbe-bb51-d49074d278dd\\\";s:3:\\\"fas\\\";s:11:\\\"fa-file-alt\\\";s:4:\\\"time\\\";s:25:\\\"January 24, 2025 07:08 AM\\\";}}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:7:\\\"backoff\\\";N;s:13:\\\"maxExceptions\\\";N;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}}\"}}', 0, NULL, 1737702529, 1737702529),
+(2, 'default', '{\"uuid\":\"5b7f7d4b-bf16-41b8-b633-9d82e7b59707\",\"displayName\":\"Illuminate\\\\Notifications\\\\Events\\\\BroadcastNotificationCreated\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Broadcasting\\\\BroadcastEvent\",\"command\":\"O:38:\\\"Illuminate\\\\Broadcasting\\\\BroadcastEvent\\\":14:{s:5:\\\"event\\\";O:60:\\\"Illuminate\\\\Notifications\\\\Events\\\\BroadcastNotificationCreated\\\":3:{s:10:\\\"notifiable\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:8:\\\"App\\\\User\\\";s:2:\\\"id\\\";i:1;s:9:\\\"relations\\\";a:0:{}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:12:\\\"notification\\\";O:36:\\\"App\\\\Notifications\\\\StatusNotification\\\":2:{s:45:\\\"\\u0000App\\\\Notifications\\\\StatusNotification\\u0000details\\\";a:3:{s:5:\\\"title\\\";s:17:\\\"New order created\\\";s:9:\\\"actionURL\\\";s:36:\\\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/11\\\";s:3:\\\"fas\\\";s:11:\\\"fa-file-alt\\\";}s:2:\\\"id\\\";s:36:\\\"421ecef5-d99c-4c86-af01-feff8918031c\\\";}s:4:\\\"data\\\";a:5:{s:5:\\\"title\\\";s:17:\\\"New order created\\\";s:9:\\\"actionURL\\\";s:36:\\\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/11\\\";s:3:\\\"url\\\";s:77:\\\"http:\\/\\/127.0.0.1:8000\\/admin\\/notification\\/421ecef5-d99c-4c86-af01-feff8918031c\\\";s:3:\\\"fas\\\";s:11:\\\"fa-file-alt\\\";s:4:\\\"time\\\";s:25:\\\"January 24, 2025 07:09 AM\\\";}}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:7:\\\"backoff\\\";N;s:13:\\\"maxExceptions\\\";N;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}}\"}}', 0, NULL, 1737702583, 1737702583);
 
 -- --------------------------------------------------------
 
@@ -189,12 +217,12 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `messages` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `photo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `subject` text NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `photo` varchar(191) DEFAULT NULL,
+  `phone` varchar(191) DEFAULT NULL,
+  `message` longtext NOT NULL,
   `read_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -217,7 +245,7 @@ INSERT INTO `messages` (`id`, `name`, `subject`, `email`, `photo`, `phone`, `mes
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(191) NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -250,15 +278,75 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mpesa_payments`
+--
+
+CREATE TABLE `mpesa_payments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `receipt` varchar(191) NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `amount` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mpesa_payments`
+--
+
+INSERT INTO `mpesa_payments` (`id`, `receipt`, `order_id`, `name`, `phone`, `email`, `amount`, `created_at`, `updated_at`) VALUES
+(1, 'TAR9OLL5Z3', 12345, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 05:47:11', '2025-01-27 05:47:11'),
+(2, 'TAR6OLS1ZM', 12345, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 05:48:31', '2025-01-27 05:48:31'),
+(3, 'TAR6OLS1ZM', 12345, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 05:48:48', '2025-01-27 05:48:48'),
+(4, 'TAR2OMY24G', 12345, 'SAPPHIRA SAPPHIRA', '2547*****151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 05:57:17', '2025-01-27 05:57:17'),
+(5, 'TAR2OMY24G', 12345, 'SAPPHIRA SAPPHIRA', '2547*****151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 06:02:28', '2025-01-27 06:02:28'),
+(6, 'TAR2PHS21E', 11, 'SAPPHIRA SAPPHIRA', '2547*****151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:34:41', '2025-01-27 09:34:41'),
+(7, 'TAR2PHS21E', 11, 'SAPPHIRA SAPPHIRA', '2547*****151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:38:35', '2025-01-27 09:38:35'),
+(8, 'TAR7PIMPZH', 11, 'SAPPHIRA SAPPHIRA', '2547*****151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:41:10', '2025-01-27 09:41:10'),
+(9, 'TAR8PJ0XYM', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:44:08', '2025-01-27 09:44:08'),
+(10, 'TAR8PJ0XYM', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:44:44', '2025-01-27 09:44:44'),
+(11, 'TAR0PJIPSK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:47:21', '2025-01-27 09:47:21'),
+(12, 'TAR0PJIPSK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:48:15', '2025-01-27 09:48:15'),
+(13, 'TAR0PJIPSK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:48:16', '2025-01-27 09:48:16'),
+(14, 'TAR0PJIPSK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:48:33', '2025-01-27 09:48:33'),
+(15, 'TAR0PJIPSK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:48:34', '2025-01-27 09:48:34'),
+(16, 'TAR0PJIPSK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:48:46', '2025-01-27 09:48:46'),
+(17, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:50:27', '2025-01-27 09:50:27'),
+(18, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:52:22', '2025-01-27 09:52:22'),
+(19, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:53:27', '2025-01-27 09:53:27'),
+(20, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:54:12', '2025-01-27 09:54:12'),
+(21, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:55:15', '2025-01-27 09:55:15'),
+(22, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:55:56', '2025-01-27 09:55:56'),
+(23, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:56:22', '2025-01-27 09:56:22'),
+(24, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:56:45', '2025-01-27 09:56:45'),
+(25, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:57:08', '2025-01-27 09:57:08'),
+(26, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:57:54', '2025-01-27 09:57:54'),
+(27, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 09:58:55', '2025-01-27 09:58:55'),
+(28, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:00:13', '2025-01-27 10:00:13'),
+(29, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:08:50', '2025-01-27 10:08:50'),
+(30, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:10:42', '2025-01-27 10:10:42'),
+(31, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:12:23', '2025-01-27 10:12:23'),
+(32, 'TAR2PJYOKK', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:12:40', '2025-01-27 10:12:40'),
+(33, 'TAR8PN88NG', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:14:17', '2025-01-27 10:14:17'),
+(34, 'TAR8PN88NG', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-27 10:14:55', '2025-01-27 10:14:55'),
+(35, 'TAS0SSULFS', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-28 05:47:32', '2025-01-28 05:47:32'),
+(36, 'TAS5SWMFAN', 11, 'SAPPHIRA SAPPHIRA', '254740274151', 'jonathanmutinda99@gmail.com', '1', '2025-01-28 06:16:18', '2025-01-28 06:16:18');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `notifications`
 --
 
 CREATE TABLE `notifications` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notifiable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` char(36) NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `notifiable_type` varchar(191) NOT NULL,
   `notifiable_id` bigint(20) UNSIGNED NOT NULL,
-  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `data` text NOT NULL,
   `read_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -270,18 +358,24 @@ CREATE TABLE `notifications` (
 
 INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
 ('2145a8e3-687d-444a-8873-b3b2fb77a342', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/blog-detail\\/where-can-i-get-some\",\"fas\":\"fas fa-comment\"}', NULL, '2020-08-15 07:31:21', '2020-08-15 07:31:21'),
+('2a78c465-a78b-4dbe-bb51-d49074d278dd', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/10\",\"fas\":\"fa-file-alt\"}', NULL, '2025-01-24 04:08:49', '2025-01-24 04:08:49'),
 ('3af39f84-cab4-4152-9202-d448435c67de', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/localhost:8000\\/admin\\/order\\/4\",\"fas\":\"fa-file-alt\"}', NULL, '2020-08-15 07:54:52', '2020-08-15 07:54:52'),
+('421ecef5-d99c-4c86-af01-feff8918031c', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/11\",\"fas\":\"fa-file-alt\"}', NULL, '2025-01-24 04:09:43', '2025-01-24 04:09:43'),
 ('4a0afdb0-71ad-4ce6-bc70-c92ef491a525', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/localhost:8000\\/blog-detail\\/the-standard-lorem-ipsum-passage-used-since-the-1500s\",\"fas\":\"fas fa-comment\"}', NULL, '2020-08-17 21:13:51', '2020-08-17 21:13:51'),
 ('540ca3e9-0ff9-4e2e-9db3-6b5abc823422', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/blog-detail\\/where-can-i-get-some\",\"fas\":\"fas fa-comment\"}', '2020-08-15 07:30:44', '2020-08-14 07:12:28', '2020-08-15 07:30:44'),
 ('5da09dd1-3ffc-43b0-aba2-a4260ba4cc76', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/localhost:8000\\/blog-detail\\/the-standard-lorem-ipsum-passage\",\"fas\":\"fas fa-comment\"}', NULL, '2020-08-15 07:51:02', '2020-08-15 07:51:02'),
 ('5e91e603-024e-45c5-b22f-36931fef0d90', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Product Rating!\",\"actionURL\":\"http:\\/\\/localhost:8000\\/product-detail\\/white-sports-casual-t\",\"fas\":\"fa-star\"}', NULL, '2020-08-15 07:44:07', '2020-08-15 07:44:07'),
+('649b8916-e365-43b3-8aa6-9d65b1cce5d9', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/8\",\"fas\":\"fa-file-alt\"}', NULL, '2025-01-24 04:06:01', '2025-01-24 04:06:01'),
 ('73a3b51a-416a-4e7d-8ca2-53b216d9ad8e', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/blog-detail\\/where-can-i-get-some\",\"fas\":\"fas fa-comment\"}', NULL, '2020-08-14 07:11:03', '2020-08-14 07:11:03'),
+('7eff20b6-d5e8-48c0-aea4-d190fd2b22f2', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/6\",\"fas\":\"fa-file-alt\"}', NULL, '2025-01-21 08:21:05', '2025-01-21 08:21:05'),
 ('8605db5d-1462-496e-8b5f-8b923d88912c', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/admin\\/order\\/1\",\"fas\":\"fa-file-alt\"}', NULL, '2020-08-14 07:20:44', '2020-08-14 07:20:44'),
 ('a6ec5643-748c-4128-92e2-9a9f293f53b5', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/localhost:8000\\/admin\\/order\\/5\",\"fas\":\"fa-file-alt\"}', NULL, '2020-08-17 21:17:03', '2020-08-17 21:17:03'),
+('b174657b-c326-47ed-9363-e336c03b1f4d', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/9\",\"fas\":\"fa-file-alt\"}', NULL, '2025-01-24 04:06:55', '2025-01-24 04:06:55'),
 ('b186a883-42f2-4a05-8fc5-f0d3e10309ff', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/admin\\/order\\/2\",\"fas\":\"fa-file-alt\"}', '2020-08-15 04:17:24', '2020-08-14 22:14:55', '2020-08-15 04:17:24'),
 ('d2fd7c33-b0fe-47d6-8bc6-f377d404080d', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/blog-detail\\/where-can-i-get-some\",\"fas\":\"fas fa-comment\"}', NULL, '2020-08-14 07:08:50', '2020-08-14 07:08:50'),
 ('dff78b90-85c8-42ee-a5b1-de8ad0b21be4', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/e-shop.loc\\/admin\\/order\\/3\",\"fas\":\"fa-file-alt\"}', NULL, '2020-08-15 06:40:54', '2020-08-15 06:40:54'),
 ('e28b0a73-4819-4016-b915-0e525d4148f5', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Product Rating!\",\"actionURL\":\"http:\\/\\/localhost:8000\\/product-detail\\/lorem-ipsum-is-simply\",\"fas\":\"fa-star\"}', NULL, '2020-08-17 21:08:16', '2020-08-17 21:08:16'),
+('e9de72db-9d13-447b-bffc-8b0fdc437ad3', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New order created\",\"actionURL\":\"http:\\/\\/127.0.0.1:8000\\/admin\\/order\\/7\",\"fas\":\"fa-file-alt\"}', NULL, '2025-01-24 04:05:10', '2025-01-24 04:05:10'),
 ('ffffa177-c54e-4dfe-ba43-27c466ff1f4b', 'App\\Notifications\\StatusNotification', 'App\\User', 1, '{\"title\":\"New Comment created\",\"actionURL\":\"http:\\/\\/localhost:8000\\/blog-detail\\/the-standard-lorem-ipsum-passage-used-since-the-1500s\",\"fas\":\"fas fa-comment\"}', NULL, '2020-08-17 21:13:29', '2020-08-17 21:13:29');
 
 -- --------------------------------------------------------
@@ -292,24 +386,24 @@ INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `
 
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `order_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `order_number` varchar(191) NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `sub_total` double(8,2) NOT NULL,
   `shipping_id` bigint(20) UNSIGNED DEFAULT NULL,
   `coupon` double(8,2) DEFAULT NULL,
   `total_amount` double(8,2) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `payment_method` enum('cod','paypal') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'cod',
-  `payment_status` enum('paid','unpaid') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unpaid',
-  `status` enum('new','process','delivered','cancel') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'new',
-  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `country` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `post_code` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address1` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address2` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_method` enum('cod','paypal','mpesa') NOT NULL DEFAULT 'cod',
+  `payment_status` enum('paid','unpaid') NOT NULL DEFAULT 'unpaid',
+  `status` enum('new','process','delivered','cancel') NOT NULL DEFAULT 'new',
+  `first_name` varchar(191) NOT NULL,
+  `last_name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `country` varchar(191) NOT NULL,
+  `post_code` varchar(191) DEFAULT NULL,
+  `address1` text NOT NULL,
+  `address2` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -322,7 +416,13 @@ INSERT INTO `orders` (`id`, `order_number`, `user_id`, `sub_total`, `shipping_id
 (1, 'ORD-PMIQF5MYPK', 3, 14399.00, 1, 573.90, 13925.10, 6, 'cod', 'unpaid', 'delivered', 'Prajwal', 'Rai', 'prajwal.iar@gmail.com', '9800887778', 'NP', '44600', 'Koteshwor', 'Kathmandu', '2020-08-14 07:20:44', '2020-08-14 09:37:37'),
 (2, 'ORD-YFF8BF0YBK', 2, 1939.03, 1, NULL, 2039.03, 1, 'cod', 'unpaid', 'delivered', 'Sandhya', 'Rai', 'user@gmail.com', '90000000990', 'NP', NULL, 'Lalitpur', NULL, '2020-08-14 22:14:49', '2020-08-14 22:15:19'),
 (3, 'ORD-1CKWRWTTIK', 3, 200.00, 1, NULL, 300.00, 1, 'paypal', 'paid', 'process', 'Prajwal', 'Rai', 'prajwal.iar@gmail.com', '9807009999', 'NP', '44600', 'Kathmandu', 'Kadaghari', '2020-08-15 06:40:49', '2020-08-17 20:52:40'),
-(4, 'ORD-HVO0KX0YHW', 3, 23660.00, 3, 150.00, 23910.00, 6, 'paypal', 'paid', 'new', 'Prajwal', 'Rai', 'prajwal.iar@gmail.com', '9800098878', 'NP', '44600', 'Pokhara', NULL, '2020-08-15 07:54:52', '2020-08-15 07:54:52');
+(4, 'ORD-HVO0KX0YHW', 3, 23660.00, 3, 150.00, 23910.00, 6, 'paypal', 'paid', 'new', 'Prajwal', 'Rai', 'prajwal.iar@gmail.com', '9800098878', 'NP', '44600', 'Pokhara', NULL, '2020-08-15 07:54:52', '2020-08-15 07:54:52'),
+(6, 'ORD-6GODJYGVJF', 30, 390.00, NULL, NULL, 390.00, 2, 'cod', 'unpaid', 'new', 'EDWIN', 'KIUMA', 'edwink@betterglobeforestry.com', '0714572978', 'NP', '1050', '1050', 'roysambu', '2025-01-21 08:21:01', '2025-01-21 08:21:01'),
+(7, 'ORD-2BQYXQMOCY', 30, 660.00, NULL, NULL, 660.00, 3, 'cod', 'unpaid', 'new', 'EDWIN', 'KIUMA', 'edwink@betterglobeforestry.com', '0714572978', 'KE', '1050', '1050', 'roysambu', '2025-01-24 04:05:07', '2025-01-24 04:05:07'),
+(8, 'ORD-VRRUV9DOMS', 30, 660.00, NULL, NULL, 660.00, 3, 'cod', 'unpaid', 'new', 'EDWIN', 'KIUMA', 'edwink@betterglobeforestry.com', '0714572978', 'KE', '1050', '1050', 'roysambu', '2025-01-24 04:06:01', '2025-01-24 04:06:01'),
+(9, 'ORD-QZOM793ZM3', 30, 660.00, NULL, NULL, 660.00, 3, 'cod', 'unpaid', 'new', 'EDWIN', 'KIUMA', 'edwink@betterglobeforestry.com', '0714572978', 'KE', '1050', '1050', 'roysambu', '2025-01-24 04:06:55', '2025-01-24 04:06:55'),
+(10, 'ORD-PVHE0JLWFI', 30, 660.00, NULL, NULL, 660.00, 3, 'cod', 'unpaid', 'new', 'EDWIN', 'KIUMA', 'edwink@betterglobeforestry.com', '0714572978', 'KE', '1050', '1050', 'roysambu', '2025-01-24 04:08:49', '2025-01-24 04:08:49'),
+(11, 'ORD-OQOB4EDNJU', 30, 540.00, NULL, NULL, 540.00, 1, 'cod', 'paid', 'process', 'EDWIN', 'KIUMA', 'edwink@betterglobeforestry.com', '0714572978', 'NP', '1050', '1050', 'roysambu', '2025-01-24 04:09:43', '2025-01-24 04:16:05');
 
 -- --------------------------------------------------------
 
@@ -331,8 +431,8 @@ INSERT INTO `orders` (`id`, `order_number`, `user_id`, `sub_total`, `shipping_id
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `token` varchar(191) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -344,17 +444,17 @@ CREATE TABLE `password_resets` (
 
 CREATE TABLE `posts` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `summary` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `quote` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `photo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tags` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `summary` text NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `quote` text DEFAULT NULL,
+  `photo` varchar(191) DEFAULT NULL,
+  `tags` varchar(191) DEFAULT NULL,
   `post_cat_id` bigint(20) UNSIGNED DEFAULT NULL,
   `post_tag_id` bigint(20) UNSIGNED DEFAULT NULL,
   `added_by` bigint(20) UNSIGNED DEFAULT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -378,9 +478,9 @@ INSERT INTO `posts` (`id`, `title`, `slug`, `summary`, `description`, `quote`, `
 
 CREATE TABLE `post_categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -406,9 +506,9 @@ CREATE TABLE `post_comments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `post_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `comment` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
-  `replied_comment` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `comment` text NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `replied_comment` text DEFAULT NULL,
   `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -435,9 +535,9 @@ INSERT INTO `post_comments` (`id`, `user_id`, `post_id`, `comment`, `status`, `r
 
 CREATE TABLE `post_tags` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -460,15 +560,15 @@ INSERT INTO `post_tags` (`id`, `title`, `slug`, `status`, `created_at`, `updated
 
 CREATE TABLE `products` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `summary` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `photo` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `summary` text NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `photo` text NOT NULL,
   `stock` int(11) NOT NULL DEFAULT 1,
-  `size` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT 'M',
-  `condition` enum('default','new','hot') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default',
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'inactive',
+  `size` varchar(191) DEFAULT 'M',
+  `condition` enum('default','new','hot') NOT NULL DEFAULT 'default',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
   `price` double(8,2) NOT NULL,
   `discount` double(8,2) NOT NULL,
   `is_featured` tinyint(1) NOT NULL,
@@ -506,8 +606,8 @@ CREATE TABLE `product_reviews` (
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `product_id` bigint(20) UNSIGNED DEFAULT NULL,
   `rate` tinyint(4) NOT NULL DEFAULT 0,
-  `review` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `review` text DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -528,13 +628,13 @@ INSERT INTO `product_reviews` (`id`, `user_id`, `product_id`, `rate`, `review`, 
 
 CREATE TABLE `settings` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `short_des` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `logo` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `photo` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext NOT NULL,
+  `short_des` text NOT NULL,
+  `logo` varchar(191) NOT NULL,
+  `photo` varchar(191) NOT NULL,
+  `address` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -554,9 +654,9 @@ INSERT INTO `settings` (`id`, `description`, `short_des`, `logo`, `photo`, `addr
 
 CREATE TABLE `shippings` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(191) NOT NULL,
   `price` decimal(8,2) NOT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -566,10 +666,10 @@ CREATE TABLE `shippings` (
 --
 
 INSERT INTO `shippings` (`id`, `type`, `price`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Kahtmandu', '100.00', 'active', '2020-08-14 04:22:17', '2020-08-14 04:22:17'),
-(2, 'Out of valley', '300.00', 'active', '2020-08-14 04:22:41', '2020-08-14 04:22:41'),
-(3, 'Pokhara', '400.00', 'active', '2020-08-15 06:54:04', '2020-08-15 06:54:04'),
-(4, 'Dharan', '400.00', 'active', '2020-08-17 20:50:48', '2020-08-17 20:50:48');
+(1, 'Kahtmandu', 100.00, 'active', '2020-08-14 04:22:17', '2020-08-14 04:22:17'),
+(2, 'Out of valley', 300.00, 'active', '2020-08-14 04:22:41', '2020-08-14 04:22:41'),
+(3, 'Pokhara', 400.00, 'active', '2020-08-15 06:54:04', '2020-08-15 06:54:04'),
+(4, 'Dharan', 400.00, 'active', '2020-08-17 20:50:48', '2020-08-17 20:50:48');
 
 -- --------------------------------------------------------
 
@@ -579,16 +679,16 @@ INSERT INTO `shippings` (`id`, `type`, `price`, `status`, `created_at`, `updated
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(191) NOT NULL,
+  `email` varchar(191) DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `photo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` enum('admin','user') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
-  `provider` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `provider_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(191) DEFAULT NULL,
+  `photo` varchar(191) DEFAULT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'user',
+  `provider` varchar(191) DEFAULT NULL,
+  `provider_id` varchar(191) DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -611,7 +711,9 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `ph
 (11, 'Miss Layla McClure', 'dcummings@example.com', '2020-08-14 21:19:50', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'user', NULL, NULL, 'active', 'DFnCS0bKFa', '2020-08-08 21:19:51', '2020-08-14 21:19:51'),
 (12, 'Mrs. Taya Ziemann', 'anderson.luz@example.net', '2020-08-14 21:19:50', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'user', NULL, NULL, 'active', '4Xgvb1HnFT', '2020-08-09 21:19:51', '2020-08-14 21:19:51'),
 (13, 'Porter Olson', 'jaden24@example.com', '2020-08-14 21:19:50', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 'user', NULL, NULL, 'active', 'gFX2w4WaMj', '2020-08-14 21:19:51', '2020-08-14 21:19:51'),
-(29, 'Prajwal Rai', 'rae.prajwal@gmail.com', NULL, NULL, NULL, 'user', 'google', '110717103019405487938', 'active', NULL, '2020-08-15 07:36:29', '2020-08-15 07:36:29');
+(29, 'Prajwal Rai', 'rae.prajwal@gmail.com', NULL, NULL, NULL, 'user', 'google', '110717103019405487938', 'active', NULL, '2020-08-15 07:36:29', '2020-08-15 07:36:29'),
+(30, 'EDWIN JOSHUA KIUMA', 'edwink@betterglobeforestry.com', NULL, '$2y$10$wGS63a2IhAspi1IJHRa1H.Fop30nad.IxQNCzSMVbQCyFukd9gOum', NULL, 'admin', NULL, NULL, 'active', NULL, '2025-01-20 05:14:49', '2025-01-20 05:14:49'),
+(31, 'Jonathan Mutinda Kilonzo', 'jonathanmutinda99@gmail.com', NULL, '$2y$10$RWGXVN.AhxFsGDSlxsoXeultqgFAWWCHTuPDaIQAQoQiK9Zy4e7nO', NULL, 'admin', NULL, NULL, 'active', NULL, '2025-01-24 09:14:31', '2025-01-24 09:14:31');
 
 -- --------------------------------------------------------
 
@@ -681,6 +783,13 @@ ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
 -- Indexes for table `messages`
 --
 ALTER TABLE `messages`
@@ -690,6 +799,12 @@ ALTER TABLE `messages`
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `mpesa_payments`
+--
+ALTER TABLE `mpesa_payments`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -812,7 +927,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -833,6 +948,12 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
@@ -845,10 +966,16 @@ ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
+-- AUTO_INCREMENT for table `mpesa_payments`
+--
+ALTER TABLE `mpesa_payments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -902,7 +1029,7 @@ ALTER TABLE `shippings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `wishlists`
