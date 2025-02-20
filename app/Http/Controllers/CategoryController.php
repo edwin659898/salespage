@@ -29,7 +29,12 @@ class CategoryController extends Controller
     {
         $parent_cats=Category::where('is_parent',1)->orderBy('title','ASC')->get();
         return view('backend.category.create')->with('parent_cats',$parent_cats);
+
+        $sub_parents=Category::where('sub_parent',1)->orderBy('title','ASC')->get();
+        return view('backend.category.create')->with('sub_parents',$sub_parents);
     }
+
+    
 
     /**
      * Store a newly created resource in storage.
@@ -46,6 +51,7 @@ class CategoryController extends Controller
             'photo'=>'string|nullable',
             'status'=>'required|in:active,inactive',
             'is_parent'=>'sometimes|in:1',
+            'sub_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
         ]);
         $data= $request->all();
@@ -56,6 +62,7 @@ class CategoryController extends Controller
         }
         $data['slug']=$slug;
         $data['is_parent']=$request->input('is_parent',0);
+        $data['sub_parent']=$request->input('sub_parent',0);
         // return $data;   
         $status=Category::create($data);
         if($status){
@@ -91,8 +98,13 @@ class CategoryController extends Controller
         $parent_cats=Category::where('is_parent',1)->get();
         $category=Category::findOrFail($id);
         return view('backend.category.edit')->with('category',$category)->with('parent_cats',$parent_cats);
+
+        $sub_parents=Category::where('sub_parent',1)->get();
+        $category=Category::findOrFail($id);
+        return view('backend.category.edit')->with('category',$category)->with('sub_parents',$sub_parents);
     }
 
+    
     /**
      * Update the specified resource in storage.
      *
@@ -110,10 +122,12 @@ class CategoryController extends Controller
             'photo'=>'string|nullable',
             'status'=>'required|in:active,inactive',
             'is_parent'=>'sometimes|in:1',
+            'sub_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
         ]);
         $data= $request->all();
         $data['is_parent']=$request->input('is_parent',0);
+        $data['sub_parent']=$request->input('sub_parent',0);
         // return $data;
         $status=$category->fill($data)->save();
         if($status){

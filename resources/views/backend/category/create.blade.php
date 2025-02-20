@@ -27,6 +27,11 @@
           <label for="is_parent">Is Parent</label><br>
           <input type="checkbox" name='is_parent' id='is_parent' value='1' checked> Yes                        
         </div>
+
+        <div class="form-group">
+          <label for="sub_parent">Sub Parent</label><br>
+          <input type="checkbox" name='sub_parent' id='sub_parent' value='1' checked> Yes                        
+        </div>
         {{-- {{$parent_cats}} --}}
 
         <div class="form-group d-none" id='parent_cat_div'>
@@ -35,6 +40,17 @@
               <option value="">--Select any category--</option>
               @foreach($parent_cats as $key=>$parent_cat)
                   <option value='{{$parent_cat->id}}'>{{$parent_cat->title}}</option>
+              @endforeach
+          </select>
+        </div>
+
+{{-- parent_id Index	bigint(20)		UNSIGNED	Yes	NULL	 --}}
+        <div class="form-group" id='sub_parent_div'>
+          <label for="parent_id">Sub Parent Category</label>
+          <select name="parent_id" class="form-control">
+              <option value="">--Select any Sub category--</option>
+              @foreach($parent_cats as $key=>$sub_parent)
+                  <option value='{{$sub_parent->id}}'>{{$sub_parent->title}}</option>
               @endforeach
           </select>
         </div>
@@ -107,4 +123,21 @@
     }
   })
 </script>
+
+
+<script>
+    $('#sub_parent').change(function(){
+  var is_checked=$('#sub_parent').prop('checked');
+  // alert(is_checked);
+  if(is_checked){
+    $('#sub_parent_div').addClass('d-none');
+    $('#sub_parent_div').val('');
+  }
+  else{
+    $('#sub_parent_div').removeClass('d-none');
+  }
+})
+
+</script>
+
 @endpush

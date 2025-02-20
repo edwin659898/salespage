@@ -17,7 +17,10 @@
                     <div class="carousel-caption d-none d-md-block text-left">
                         <h1 class="wow fadeInDown">{{$banner->title}}</h1>
                         <p>{!! html_entity_decode($banner->description) !!}</p>
-                        <a class="btn btn-lg ws-btn wow fadeInUpBig" href="{{route('product-grids')}}" role="button">See Our Products<i class="far fa-arrow-alt-circle-right"></i></i></a>
+                        <a class="btn btn-lg ws-btn wow fadeInUpBig" href="https://miti-magazine.betterglobeforestry.com" target="_blank" role="button">
+                            Subscribe Our Miti Magazines <i class="far fa-arrow-alt-circle-right"></i>
+                        </a>                        
+                        {{-- <a class="btn btn-lg ws-btn wow fadeInUpBig" href="{{route('product-grids')}}" role="button">See Our Products<i class="far fa-arrow-alt-circle-right"></i></i></a> --}}
                     </div>
                 </div>
             @endforeach

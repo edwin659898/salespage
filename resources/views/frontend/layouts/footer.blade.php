@@ -1,5 +1,20 @@
 
 	<!-- Start Footer Area -->
+	<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+	var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+	(function(){
+	var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+	s1.async=true;
+	s1.src='https://embed.tawk.to/67ac670c3a842732607dbeb0/1ijsn52nb';
+	s1.charset='UTF-8';
+	s1.setAttribute('crossorigin','*');
+	s0.parentNode.insertBefore(s1,s0);
+	})();
+	</script>
+	<!--End of Tawk.to Script-->
+
+	
 	<footer class="footer">
 		<!-- Footer Top -->
 		<div class="footer-top section">
@@ -9,7 +24,7 @@
 						<!-- Single Widget -->
 						<div class="single-footer about">
 							<div class="logo">
-								<a href="   "><img src="{{asset('backend/img/logo2.png')}}" alt="#"></a>
+								<a href="   "><img src="{{asset('backend/img/logo.png')}}" alt="#"></a>
 							</div>
 							@php
 								$settings=DB::table('settings')->get();
@@ -25,10 +40,11 @@
 							<h4>Information</h4>
 							<ul>
 								<li><a href="https://betterglobeforestry.com">Website</a></li>
-								<li><a href="#">Newsletter</a></li>
+								<li><a href="https://salespage.betterglobeforestry.com/">Wood Products</a></li>
+								<li><a href="https://betterglobeforestry.s3.amazonaws.com/newsletterwebsite/newsletter.html">Newsletter</a></li>
 								{{-- <li><a href="#">Terms & Conditions</a></li> --}}
 								<li><a href="{{route('contact')}}">Contact Us</a></li>
-								<li><a href="#">Help</a></li>
+								<li><a href="">Help</a></li>
 							</ul>
 						</div>
 						<!-- End Single Widget -->

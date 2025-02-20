@@ -9,22 +9,21 @@
          </div>
      </div>
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary float-left">Category Lists</h6>
-      <a href="{{route('category.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Category</a>
+      <h6 class="m-0 font-weight-bold text-primary float-left">Order Lists</h6>
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        @if(count($categories)>0)
-        <table class="table table-bordered" id="banner-dataTable" width="100%" cellspacing="0">
+        @if(count($orders)>0)
+        <table class="table table-bordered" id="order-dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>S.N.</th>
-              <th>Title</th>
-              <th>Slug</th>
-              <th>Is Parent</th>
-              <th>Parent Category</th>
-              <th>sub Parent Category</th>
-              <th>Photo</th>
+              <th>Order No.</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Quantity</th>
+              <th>Charge</th>
+              <th>Total Amount</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -32,60 +31,56 @@
           <tfoot>
             <tr>
               <th>S.N.</th>
-              <th>Title</th>
-              <th>Slug</th>
-              <th>Is Parent</th>
-              <th>Parent Category</th>
-              <th>Sub Parent Category</th>
-              <th>Photo</th>
+              <th>Order No.</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Quantity</th>
+              <th>Charge</th>
+              <th>Total Amount</th>
               <th>Status</th>
               <th>Action</th>
-            </tr>
+              </tr>
           </tfoot>
           <tbody>
-            {{-- is_parent	tinyint(1)			No	1	 --}}
-
-            @foreach($categories as $category)
-              @php
-              @endphp
+            @foreach($orders as $order)  
+            @php
+                $shipping_charge=DB::table('shippings')->where('id',$order->shipping_id)->pluck('price');
+            @endphp 
                 <tr>
-                    <td>{{$category->id}}</td>
-                    <td>{{$category->title}}</td>
-                    <td>{{$category->slug}}</td>
-                    <td>{{(($category->is_parent==1)? 'Yes': 'No')}}</td>
-                    <td>{{(($category->sub_parent==1)? 'Yes': 'No')}}</td>
+                    <td>{{$order->id}}</td>
+                    <td>{{$order->order_number}}</td>
+                    <td>{{$order->first_name}} {{$order->last_name}}</td>
+                    <td>{{$order->email}}</td>
+                    <td>{{$order->quantity}}</td>
+                    <td>@foreach($shipping_charge as $data) $ {{number_format($data,2)}} @endforeach</td>
+                    <td>${{number_format($order->total_amount,2)}}</td>
                     <td>
-                        {{$category->parent_info->title ?? ''}}
-                    </td>
-                    <td>
-                        @if($category->photo)
-                            <img src="{{$category->photo}}" class="img-fluid" style="max-width:80px" alt="{{$category->photo}}">
+                        @if($order->status=='new')
+                          <span class="badge badge-primary">{{$order->status}}</span>
+                        @elseif($order->status=='process')
+                          <span class="badge badge-warning">{{$order->status}}</span>
+                        @elseif($order->status=='delivered')
+                          <span class="badge badge-success">{{$order->status}}</span>
                         @else
-                            <img src="{{asset('backend/img/thumbnail-default.jpg')}}" class="img-fluid" style="max-width:80px" alt="avatar.png">
+                          <span class="badge badge-danger">{{$order->status}}</span>
                         @endif
                     </td>
                     <td>
-                        @if($category->status=='active')
-                            <span class="badge badge-success">{{$category->status}}</span>
-                        @else
-                            <span class="badge badge-warning">{{$category->status}}</span>
-                        @endif
-                    </td>
-                    <td>
-                        <a href="{{route('category.edit',$category->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
-                    <form method="POST" action="{{route('category.destroy',[$category->id])}}">
-                      @csrf
-                      @method('delete')
-                          <button class="btn btn-danger btn-sm dltBtn" data-id={{$category->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                        <a href="{{route('order.show',$order->id)}}" class="btn btn-warning btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="view" data-placement="bottom"><i class="fas fa-eye"></i></a>
+                        <a href="{{route('order.edit',$order->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
+                        <form method="POST" action="{{route('order.destroy',[$order->id])}}">
+                          @csrf 
+                          @method('delete')
+                              <button class="btn btn-danger btn-sm dltBtn" data-id={{$order->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
                         </form>
                     </td>
-                </tr>
+                </tr>  
             @endforeach
           </tbody>
         </table>
-        <span style="float:right">{{$categories->links()}}</span>
+        <span style="float:right">{{$orders->links()}}</span>
         @else
-          <h6 class="text-center">No Categories found!!! Please create Category</h6>
+          <h6 class="text-center">No orders found!!! Please order some products</h6>
         @endif
       </div>
     </div>
@@ -112,12 +107,12 @@
   <!-- Page level custom scripts -->
   <script src="{{asset('backend/js/demo/datatables-demo.js')}}"></script>
   <script>
-
-      $('#banner-dataTable').DataTable( {
+      
+      $('#order-dataTable').DataTable( {
             "columnDefs":[
                 {
                     "orderable":false,
-                    "targets":[3,4,5]
+                    "targets":[8]
                 }
             ]
         } );
@@ -125,7 +120,7 @@
         // Sweet alert
 
         function deleteData(id){
-
+            
         }
   </script>
   <script>

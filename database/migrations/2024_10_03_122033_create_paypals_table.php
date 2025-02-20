@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('paypals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->string('payment_id');
+            $table->float('amount');
             $table->string('currency');
-            $table->string('amount');
-            $table->string('reference');
-            $table->text('paypal_order_id');
-            $table->text('token')->nullable();
-            $table->text('PayerID')->nullable();
-            $table->text('payload')->nullable();
+            // $table->text('paypal_order_id');
+            // $table->text('token')->nullable();
+            // $table->text('PayerID')->nullable();
+            // $table->text('payload')->nullable();
             $table->string('status')->default('unverified');
             $table->timestamps();
         });

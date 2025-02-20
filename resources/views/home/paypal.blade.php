@@ -120,6 +120,7 @@
                           <!--bs5 input-->
 
             <form class="row g-3" action="./stk_initiate.php" method="POST">
+              {{-- action="{{ route('payment') }}"  --}}
 
               @csrf
 

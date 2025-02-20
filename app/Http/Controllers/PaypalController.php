@@ -16,10 +16,11 @@ class PaypalController extends Controller
      */
     public function _construct()
     {
-        $this->gateway = Omnipay::create('PayPal_Rest'); 
-        $this->gateway->setClientId('PAYPAL_CLIENT_ID'); 
-        $this->gateway->setSecreate('PAYPAL_CLIENT_SECREATE'); 
-        $this->gateway->setTestMode(true); 
+      // $this->middleware('auth');
+      $this->gateway = Omnipay::create('PayPal_Rest');
+      $this->gateway->setClientId(env('PAYPAL_LIVE_CLIENT_ID'));
+      $this->gateway->setSecret(env('PAYPAL_LIVE_CLIENT_SECRET'));
+      $this->gateway->setTestMode(false);  // Use true for sandbox mode 
     }
     public function pay(Request $request){
         try{

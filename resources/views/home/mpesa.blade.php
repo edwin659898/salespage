@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lipa na mpesa</title>
+    <title>Lipa na mpesa / Airtel Money</title>
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -109,7 +109,7 @@
         <div class="media mt-4 pl-2">
             <img src="{{ asset('images/1200px-M-PESA_LOGO-01.svg.png') }}" alt="M-PESA Logo" class="mr-3" height="75" />
           <div class="media-body">
-            <h6 class="mt-1">PAY USING MPESA</h6>
+            <h6 class="mt-1">PAY USING MPESA / AIRTEL MONEY</h6>
 
           </div>
         </div>
@@ -124,7 +124,7 @@
             {{-- <p class="btn btn-primary btn-lg btn-block" type="submit">Pay Now {{ $total_amount }}</p> --}}
                   <input type="text" style="display:none;" class="form-control" name="amount" placeholder="Enter Amount" value="{{ $total_amount }}"> 
 
-                  <p style="color: #fff">Enter your M-Pesa <span style="color: #d81a1a">PHONE NUMBER</span> below then click Pay.<br> It will propt you to Enter your <span style="color: #d81a1a">PIN</span>.<br> Please confirm the amount and name (Sales Page) before Sending </p>
+                  <p style="color: #fff">Enter your M-Pesa / Airtel <span style="color: #d81a1a">PHONE NUMBER</span> below then click Pay.<br> It will propt you to Enter your <span style="color: #d81a1a">PIN</span>.<br> Please confirm the amount and name (Sales Page) before Sending </p>
                 </div>
                 <div class="col-12">
                   <label for="tel" class="form-label" >Enter Phone Number</label>
@@ -132,7 +132,7 @@
                 </div>
              
                 <div class="col-12">
-                  <button type="submit" class="btn btn-success" name="submit" value="submit">Pay ${{ $total_amount }}</button>
+                  <button type="submit" class="btn btn-success" name="submit" value="submit">Pay KSHs{{ $total_amount }}</button>
                 </div>
               </form>
               <!--bs5 input-->

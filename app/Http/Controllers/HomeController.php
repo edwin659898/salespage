@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\MpesaPayment;
 use App\Models\ProductReview;
 use App\Models\PostComment;
@@ -15,23 +16,30 @@ use App\Libraries\IpayService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderMail;
 use App\Mail\AdminOrder;
-
-
-
+use GrahamCampbell\ResultType\Success;
+use Omnipay\Omnipay;
+use PhpParser\Node\Stmt\TryCatch;
 use Session;
 use Stripe;
 
 class HomeController extends Controller
 {
+
+    private $gateway;
     /**
      * Create a new controller instance.
      *
      * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    //  */
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    //     $this->gateway = Omnipay::create('PayPal_Rest');
+    //     $this->gateway->setClientId(env('PAYPAL_LIVE_CLIENT_ID'));
+    //     $this->gateway->setSecretId(env('PAYPAL_LIVE_CLIENT_SECRET'));
+    //     $this->gateway->setTestMode(false);
+
+    // }
 
     /**
      * Show the application dashboard.
@@ -68,6 +76,11 @@ class HomeController extends Controller
     public function orderIndex(){
         $orders=Order::orderBy('id','DESC')->where('user_id',auth()->user()->id)->paginate(10);
         return view('user.order.index')->with('orders',$orders);
+    } 
+    
+    public function mpesaorderIndex(){
+        $orders=Order::orderBy('id','DESC')->where('user_id',auth()->user()->id)->paginate(10);
+        return view('user.mpesa_orders.index')->with('orders',$orders);
     }
     public function userOrderDelete($id)
     {
@@ -85,6 +98,7 @@ class HomeController extends Controller
                     request()->session()->flash('error','Order can not deleted');
                 }
                 return redirect()->route('user.order.index');
+                return redirect()->route('user.mpesa_orders.index');
            }
         }
         else{
@@ -99,12 +113,18 @@ class HomeController extends Controller
         // return $order;
         return view('user.order.show')->with('order',$order);
     }
+    public function mpesaorderShow($id)
+    {
+        $order=Order::find($id);
+        // return $order;
+        return view('user.mpesaorder.mpesa')->with('order',$order);
+    }
     // Product Review
     public function productReviewIndex(){
         $reviews=ProductReview::getAllUserReview();
         return view('user.review.index')->with('reviews',$reviews);
     }
-
+    
     public function productReviewEdit($id)
     {
         $review=ProductReview::find($id);
@@ -283,7 +303,7 @@ class HomeController extends Controller
 
 
 
-
+ 
     // paypal
     public function paypal($total_amount){
 
@@ -291,19 +311,22 @@ class HomeController extends Controller
     }
     public function paypalPost(Request $request,$total_amount)
     {
-        dd($total_amount);
-        
-        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-    
-        Stripe\Charge::create ([
-                "amount" =>$total_amount * 100,
-                "currency" => "usd",
-                "source" => $request->stripeToken,
-                "description" => "Thank you for your Payment to Sales-Page Application(powered by BGF)." 
-        ]);
-         Session::flash('success', 'Payment successful!');
-              
-        return back();
+    //    try{
+    //         $response = $this->gateway->purchase(array(
+    //             'total_amount' => $request->total_amount,
+    //             'currency' => env('PAYPAL_CURRENCY'),
+    //             'returnUrl' => url('Success'),
+    //             'cancelUrl' => url('Failed'),
+    //         ))->send();
+
+    //         if ($response->isRedirect()){
+    //             $response->redirect();
+    //         }else{
+    //             return $response->getMessage();
+    //         }
+    //    }catch (\Throwable $th){
+    //        return $th->getMessage();
+    //    }
     }
 
     // cash oder

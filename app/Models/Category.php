@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable=['title','slug','summary','photo','status','is_parent','parent_id','added_by'];
+    protected $fillable=['title','slug','summary','photo','status','is_parent', 'sub_parent','parent_id','added_by'];
 
     public function parent_info(){
         return $this->hasOne('App\Models\Category','id','parent_id');
@@ -18,6 +18,13 @@ class Category extends Model
     public static function shiftChild($cat_id){
         return Category::whereIn('id',$cat_id)->update(['is_parent'=>1]);
     }
+
+    public static function shiftsubChild($cat_id){
+        return Category::whereIn('id',$cat_id)->update(['sub_parent'=>1]);
+    }
+
+   
+
     public static function getChildByParentID($id){
         return Category::where('parent_id',$id)->orderBy('id','ASC')->pluck('title','id');
     }
@@ -28,6 +35,11 @@ class Category extends Model
     public static function getAllParentWithChild(){
         return Category::with('child_cat')->where('is_parent',1)->where('status','active')->orderBy('title','ASC')->get();
     }
+
+    public static function getsubAllParentWithChild(){
+        return Category::with('child_cat')->where('sub_parent',1)->where('status','active')->orderBy('title','ASC')->get();
+    }
+
     public function products(){
         return $this->hasMany('App\Models\Product','cat_id','id')->where('status','active');
     }

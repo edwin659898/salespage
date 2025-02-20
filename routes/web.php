@@ -39,28 +39,6 @@
         return login()->back();
     })->name('cache.clear');
 
-    // Mpesa Daraja
-    // Route::controller(PaymentController::class)
-    // ->prefix('payments')
-    // ->as('payments')
-    // ->group(function(){
-    //     Route::get('/initiatepush','initiateStkPush')->name('initiatepush');
-    //     Route::post('/stkcallback','stkCallback')->name('stkcallback');
-    //     Route::get('/stkquery','stkQuery')->name('stkquery');
-    //     Route::get('/registerurl','registerUrl')->name('registerurl');
-    //     Route::post('/validation','Validation')->name('validation');
-    //     Route::post('/confirmation','Confirmation')->name('confirmation');
-    //     Route::get('/simulate','Simulate')->name('simulate');
-    //     Route::get('/qrcode','qrcode')->name('qrcode');
-    //     Route::get('/b2c','b2c')->name('b2c');
-    //     Route::post('/b2cresult','b2cResult')->name('b2cresult');
-    //     Route::post('/b2ctimeout','b2cTimeout')->name('b2ctimeout');
-    //     Route::get('/reversal','Reversal')->name('reversal');
-    //     Route::post('/reversalresult','reversalResult')->name('reversalresult');
-    //     Route::post('/reversaltimeout','reversalTimeout')->name('reversaltimeout');
-
-    // });
-
 
     // STORAGE LINKED ROUTE
     Route::get('storage-link',[AdminController::class,'storageLink'])->name('storage.link');
@@ -206,6 +184,14 @@
         Route::get('/order', "HomeController@orderIndex")->name('user.order.index');
         Route::get('/order/show/{id}', "HomeController@orderShow")->name('user.order.show');
         Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');
+         //  Order
+         Route::get('/order', "HomeController@orderIndex")->name('user.order.index');
+         Route::get('/order/show/{id}', "HomeController@mpesaorderShow")->name('user.order.show');
+         Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');
+
+         Route::get('/mpesa-orders', [HomeController::class, 'index'])->name('mpesa_orders.index');
+
+
         // Product Review
         Route::get('/user-review', [HomeController::class, 'productReviewIndex'])->name('user.productreview.index');
         Route::delete('/user-review/delete/{id}', [HomeController::class, 'productReviewDelete'])->name('user.productreview.delete');
@@ -256,9 +242,9 @@ Route::get('/mpesa/{total_amount}',[HomeController::class,'mpesa']);
 
 // paypal home
 Route::get('/paypal/{total_amount}',[HomeController::class,'paypal']); 
-Route::post('/paypal/stk_initiate', [HomeController::class, 'stkInitiate']);
+Route::post('/paypalPost', [HomeController::class, 'paypalPost'])->name('payment');
 
-Route::post('pay', [PayPalController::class, 'pay'])->name('payment');
+// Route::post('pay', [PayPalController::class, 'pay'])->name('payment');
 
 
 // cash home

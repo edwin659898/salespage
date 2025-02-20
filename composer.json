@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "league/omnipay": "^3.2",
+        "omnipay/omnipay": "^3.2",
         "omnipay/paypal": "^3.0",
         "pusher/pusher-php-server": "^7.2",
         "safaricom/mpesa": "*",
