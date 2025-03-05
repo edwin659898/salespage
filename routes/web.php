@@ -20,6 +20,8 @@
     use \UniSharp\LaravelFilemanager\Lfm;    
     use App\Http\Controllers\PayController;
     use App\Http\Controllers\PaymentController;
+    use App\Http\Controllers\DownloadController;
+
 
     /*
     |--------------------------------------------------------------------------
@@ -242,6 +244,8 @@ Route::get('/mpesa/{total_amount}',[HomeController::class,'mpesa']);
 
 // paypal home
 Route::get('/paypal/{total_amount}',[HomeController::class,'paypal']); 
+
+Route::post('/paypal/stk_initiate', [HomeController::class, 'stkInitiate']);
 Route::post('/paypalPost', [HomeController::class, 'paypalPost'])->name('payment');
 
 // Route::post('pay', [PayPalController::class, 'pay'])->name('payment');
@@ -261,3 +265,9 @@ Route::post('/mpesa/stk_initiate', [HomeController::class, 'initiatePayment'])
     ->name('post.ipay')
     ->middleware('auth');
 Route::get('/ipay_payment', [HomeController::class, 'handlePaymentCallback'])->name('ipay.callback');
+
+
+
+Route::get('download/{token}', [DownloadController::class, 'download'])
+    ->name('secure.download')
+    ->middleware('signed');
