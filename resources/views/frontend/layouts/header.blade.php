@@ -135,9 +135,7 @@
                             @endauth
                             <!--/ End Shopping Item -->
                         </div>
-                        {{-- <div class="sinlge-bar">
-                            <a href="{{route('wishlist')}}" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
-                        </div> --}}
+                      
                         <div class="sinlge-bar shopping">
                             <a href="{{route('cart')}}" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{Helper::cartCount()}}</span></a>
                             <!-- Shopping Item -->
@@ -172,6 +170,13 @@
                             @endauth
                             <!--/ End Shopping Item -->
                         </div>
+                        <div class="sinlge-bar">
+
+                        <select name="country" id="country" onchange="changeCurrency()">
+                             
+                        </select>                   
+                </div> 
+                     
                     </div>
                 </div>
             </div>
@@ -209,3 +214,115 @@
     </div>
     <!--/ End Header Inner -->
 </header>
+<script>
+     const countries = [
+        
+        { code: "US", name: "United States" },
+        { code: "ZA", name: "South Africa" },
+        { code: "CH", name: "Switzerland" },
+        { code: "ES", name: "Spain" },
+        { code: "NO", name: "Norway" },
+        { code: "KE", name: "Kenya" },
+        { code: "DE", name: "Germany" },
+        { code: "FI", name: "Finland" }
+    ];
+
+    const select = document.getElementById("country");
+    countries.forEach(country => {
+        let option = document.createElement("option");
+        option.value = country.code;
+        option.textContent = country.name;
+        select.appendChild(option);
+    });
+    
+    const countryCurrencies = {
+    FI: "EUR", DE: "EUR", KE: "KES", NO: "NOK", ES: "EUR", ZA: "ZAR", CH: "CHF", US: "USD"
+};
+async function fetchExchangeRates() {
+        try {
+            const response = await fetch("https://open.er-api.com/v6/latest/USD");
+            const data = await response.json();
+            return data.rates;
+        } catch (error) {
+            console.error("Error fetching exchange rates:", error);
+            return null;
+        }
+    }
+
+  async function changeCurrency() {
+        const countrySelect = document.getElementById("country");
+        const selectedCountry = countrySelect.value;
+        const currencyCode = countryCurrencies[selectedCountry];
+
+        console.log(selectedCountry);
+        console.log(currencyCode);
+
+
+
+        // if (!currencyCode) {
+        //     aler
+        //     return;
+        // }
+
+
+        const exchangeRates = await fetchExchangeRates();
+        if (exchangeRates && exchangeRates[currencyCode]) {
+            if (typeof localStorage !== "undefined") {
+              
+            localStorage.setItem("currencyCode", currencyCode );
+            localStorage.setItem("currentExchange",exchangeRates[currencyCode] )
+            console.log(exchangeRates[currencyCode]);
+            } else {
+                console.error("localStorage is not available.");
+}
+        } else {
+            document.getElementById("exchangeRate").textContent = "N/A";
+        }
+        updatePrices();
+    }
+
+
+    function updatePrices() {
+    console.log("Updating prices...");
+
+    if (typeof localStorage !== "undefined") {
+        const currencyCode = localStorage.getItem("currencyCode");
+        const exchangeRate = localStorage.getItem("currentExchange");
+
+        if (!currencyCode || !exchangeRate) return; // Exit if data is missing
+
+        const rate = parseFloat(exchangeRate); // Convert to float
+
+        document.querySelectorAll("#convertedPrice, #originalPrice").forEach(element => {
+            let basePrice = parseFloat(element.getAttribute("data-price")); 
+            if (!isNaN(basePrice)) {
+                let convertedPrice = basePrice * rate; 
+                element.textContent = `${currencyCode} ${convertedPrice.toFixed(2)}`;
+            }
+        });
+
+        document.querySelectorAll(".product-price span").forEach(element => {
+            let textPrice = element.textContent.replace(/[^0-9.]/g, "");
+            let basePrice = parseFloat(textPrice);
+            console.log(basePrice);
+            if (!isNaN(basePrice)) {
+                let convertedPrice = basePrice * rate;
+                element.textContent = `${currencyCode} ${convertedPrice.toFixed(2)}`;
+            }
+        });
+
+    } else {
+        console.error("localStorage is not available.");
+    }
+}
+document.addEventListener("DOMContentLoaded", function () {
+    
+    if (localStorage.currencyCode && localStorage.currentExchange) {
+        updatePrices();
+    }
+});
+
+
+
+   
+ </script>
