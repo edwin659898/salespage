@@ -5,20 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Models\Order;
-use App\Models\Payment;
-use App\Models\MpesaPayment;
 use App\Models\ProductReview;
 use App\Models\PostComment;
+use App\Models\Purchase;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 use App\Rules\MatchOldPassword;
 use Hash;
+use Helper;
 use Illuminate\Contracts\Session\Session as SessionSession;
-use App\Libraries\IpayService;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\OrderMail;
-use App\Mail\AdminOrder;
-use GrahamCampbell\ResultType\Success;
-use Omnipay\Omnipay;
-use PhpParser\Node\Stmt\TryCatch;
+
 use Session;
 use Stripe;
 
@@ -354,96 +350,48 @@ class HomeController extends Controller
 
 
     //home controller
-    // public function initiatePayment(Request $request)
-    // {
-    //     // Example Order Details
-    //     $orderId = '12345'; // Unique order ID
-    //     $amount = 1; // Amount in KES
-    //     $phoneNumber = '254717606015'; // Customer's phone number
-    //     $email = 'mwangimike15@gmail.com'; // Customer's email
-
-    //     // Load iPay Credentials from Environment
-    //     $vendorId = env('IPAY_VENDOR_ID');
-    //     $callbackUrl = env('IPAY_CALLBACK_URL');
-    //     $secretKey = env('IPAY_VENDOR_SECRET');
-    //     $paymentUrl = env('IPAY_PAYMENT_URL');
-
-    //     // Prepare POST Data
-    //     $postData = [
-    //         'live' => '1', // Test environment (set to '1' for live)
-    //         'oid' => $orderId, // Order ID
-    //         'inv' => 'INV_' . $orderId, // Invoice number
-    //         'ttl' => $amount, // Amount
-    //         'tel' => $phoneNumber, // Customer's phone number
-    //         'eml' => $email, // Customer's email
-    //         'vid' => $vendorId, // Vendor ID
-    //         'curr' => 'KES', // Currency
-    //         'p1' => '',
-    //         'p2' => '',
-    //         'p3' => '',
-    //         'p4' => '',
-    //         'cbk' => $callbackUrl, // Callback URL
-    //         'cst' => '1', // Customer confirmation required
-    //         'crl' => '2', // Redirect URL
-    //     ];
-
-    //     // Generate the Hash
-    //     $hashString = $postData['live'].$postData['oid'] . $postData['inv'] . $postData['ttl'] . $postData['tel'] . $postData['eml'] . $postData['vid'];
-    //     $postData['hsh'] = hash_hmac('sha256', $hashString, $secretKey);
-
-    //     // Redirect to iPay Payment Page
-    //     return view('ipay/ipay', [
-    //         'paymentUrl' => $paymentUrl,
-    //         'data' => $postData,
-    //     ]);
-    // }
-
-    //leave everything to ipay
     public function initiatePayment(Request $request)
     {
-        $profile=Auth()->user();
+        // Example Order Details
+        $orderId = '12345'; // Unique order ID
+        $amount = 1; // Amount in KES
+        $phoneNumber = '254717606015'; // Customer's phone number
+        $email = 'mwangimike15@gmail.com'; // Customer's email
 
-        // return response()->json([
-        //     "success"=>true,
-        //     "data"=> $request->all()
-        // ], 200);
+        // Load iPay Credentials from Environment
+        $vendorId = env('IPAY_VENDOR_ID');
+        $callbackUrl = env('IPAY_CALLBACK_URL');
+        $secretKey = env('IPAY_VENDOR_SECRET');
+        $paymentUrl = env('IPAY_PAYMENT_URL');
 
+        // Prepare POST Data
+        $postData = [
+            'live' => '1', // Test environment (set to '1' for live)
+            'oid' => $orderId, // Order ID
+            'inv' => 'INV_' . $orderId, // Invoice number
+            'ttl' => $amount, // Amount
+            'tel' => $phoneNumber, // Customer's phone number
+            'eml' => $email, // Customer's email
+            'vid' => $vendorId, // Vendor ID
+            'curr' => 'KES', // Currency
+            'p1' => '',
+            'p2' => '',
+            'p3' => '',
+            'p4' => '',
+            'cbk' => $callbackUrl, // Callback URL
+            'cst' => '1', // Customer confirmation required
+            'crl' => '2', // Redirect URL
+        ];
 
-        if (!$profile) {
-            return response()->json(['error' => "user not logged in"], 401);
-        }
-        //validate and sanitize the phone number to work
-        try {
-            $this->validate($request, [
-                'phone' => 'required',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
-        }
+        // Generate the Hash
+        $hashString = $postData['live'].$postData['oid'] . $postData['inv'] . $postData['ttl'] . $postData['tel'] . $postData['eml'] . $postData['vid'];
+        $postData['hsh'] = hash_hmac('sha256', $hashString, $secretKey);
 
-
-        // $orderId = Session::get('referenceId');
-        $orderId=11;
-        $amount = $request->amount;
-        $email = $profile->email; 
-        $phone =$request->phone;
-            $data = IpayService::generateData([
-                'total' => $amount,
-                'oid' => $orderId,
-                'phone' => $phone,
-                'email' => $email,
-                'currency' => 'KES',
-                'url' => \Illuminate\Support\Facades\URL::to('ipay_payment'), // Use fully qualified namespace
-            ]);
-    
-            // Redirect to iPay
-            $ipayUrl = 'https://payments.ipayafrica.com/v3/ke?' . http_build_query($data);
-        
-            return redirect()->away($ipayUrl);
-
-        
-
-      
+        // Redirect to iPay Payment Page
+        return view('ipay/ipay', [
+            'paymentUrl' => $paymentUrl,
+            'data' => $postData,
+        ]);
     }
 
     public function handlePaymentCallback(Request $request)
@@ -473,62 +421,5 @@ class HomeController extends Controller
             return response()->json(['message' => 'Payment failed!', 'status' => $status]);
         }
     }
-    
-    protected function updateOrdersOnSuccess($orderId, $transactionId, $amount, $name, $email, $phone, $user)
-    {
-         $adminEmail="accounts@betterglobeforestry.com";
-         $order = Order::find($orderId);
-
-            if (!$order) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "Order not found",
-                ], 404);
-            }
-
-    
-        $order->payment_status = "paid";
-        $order->payment_method = "mpesa";
-        $order->save();
-    
-        // Save mpesa transaction
-
-        // http://127.0.0.1:8000/ipay_payment?status=aei7p7yrx4ae34&txncd=TAR9OJOGMJ&msisdn_id=SAPPHIRA+SAPPHIRA&msisdn_idnum=254740274151&p1=&p2=&p3=&p4=&uyt=744573166&agt=35428837&qwh=1792841707&ifd=1451952052&afd=631999497&poi=97754184&id=12345&ivm=12345&mc=1&channel=MPESA&vat=0.0024&commission=0.015
-     
-        $mpesaPayment = new MpesaPayment();
-        $mpesaPayment->order_id =$orderId;
-        $mpesaPayment->receipt = $transactionId;
-        $mpesaPayment->amount = $amount;
-        $mpesaPayment->name = $name;
-        $mpesaPayment->email = $email;
-        $mpesaPayment->phone = $phone;
-
-        $mpesaPayment->save();
-
-
-
-
-        
-        try {
-            // Attempt to send the email to the customer
-            Mail::to($email)->send(new OrderMail($order, $user));
-
-            //send email to admin
-            
-            Mail::to($adminEmail)->send(new AdminOrder($order, $user));
-        
-          
-        } catch (\Exception $e) {
-            \Log::error('Error sending email: ' . $e->getMessage());
-        
-            // Error response
-        
-        }
-        
-        header('Location: /');
-        exit;
-    }
-
-
    
 }
